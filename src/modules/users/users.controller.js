@@ -195,3 +195,11 @@ export const updateWishlist = asyncHandler(
         return res.status(201).json({ message: "done", returnUser })
     }
 )
+
+export const getWishlistForUser=asyncHandler(
+    async(req,res,nxt)=>{
+        const {id} =req.params
+        const user= await User.findById(id).populate("wishlist")
+        return res.json({message:"done",wishlist:user.wishlist})
+    }
+)

@@ -46,3 +46,5 @@ usersRouter.post("/createAdmin",checkUserToken,allowedTo(['admin']),usersControl
 usersRouter.put("/change/password",appValidator(usersValidationSchemas.changePassword),usersController.changePassword)
 
 usersRouter.put("/wishlist/:id",usersController.updateWishlist)
+
+usersRouter.get("/wishlist/:id",usersController.getWishlistForUser)
