@@ -50,3 +50,9 @@ export const changePassword=Joi.object({
     id:Joi.string(),
     password: Joi.string().min(6),
 })
+
+
+export const wishlist=Joi.object({
+    stock:Joi.string(),
+    op:Joi.string().valid('add','remove')
+})

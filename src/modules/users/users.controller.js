@@ -71,19 +71,19 @@ export const updateUserFromUser = asyncHandler(
     }
 )
 
-export const updateUserFromAdmin=crudOps.updateModel(User)
+export const updateUserFromAdmin = crudOps.updateModel(User)
 
 
 
 export const deleteUserFromAdmin = crudOps.deleteModel(User)
-export const deleteUserFromUser=crudOps.deleteFromReq('user')
+export const deleteUserFromUser = crudOps.deleteFromReq('user')
 
 export const getUserData = crudOps.getOne(User)
 
 export const forgetPassword = asyncHandler(
     async (req, res, nxt) => {
         const { email } = req.body
-        const user = await User.findOne({email})
+        const user = await User.findOne({ email })
         if (!user) return res.status(400).json({ message: "invalid email" })
 
         const code = otpGenerator.generate(6, { lowerCaseAlphabets: false, upperCaseAlphabets: false, specialChars: false, digits: true })
@@ -93,22 +93,22 @@ export const forgetPassword = asyncHandler(
             subject: 'OTP Code',
             html: `<h2>${code}</h2>`
         })
-        return res.status(200).json({ message: "check your email",userId:otp.userId })
+        return res.status(200).json({ message: "check your email", userId: otp.userId })
     }
 )
 export const resetPassword = asyncHandler(
     async (req, res, nxt) => {
-        const { code} = req.body
+        const { code } = req.body
         const otp = await OTP.findOne({ code })
         if (!otp) return res.status(400).json({ message: "expired or wrong otp" })
-        return res.status(202).json({ message: "done",userId:otp.userId })
+        return res.status(202).json({ message: "done", userId: otp.userId })
     }
 )
 
-export const changePassword=asyncHandler(
-    async(req,res,nxt)=>{
-       const user= await User.findById(req.body.id,{password:req.body.password},{new:true})
-       return res.status(201).json({message:"done",doc:user})
+export const changePassword = asyncHandler(
+    async (req, res, nxt) => {
+        const user = await User.findById(req.body.id, { password: req.body.password }, { new: true })
+        return res.status(201).json({ message: "done", doc: user })
     }
 )
 
@@ -135,11 +135,11 @@ export const updateFromAdmin = crudOps.updateModel(User)
 export const confirmCode = asyncHandler(
     async (req, res, nxt) => {
         const { code, id } = req.body
-        const otp = await OTP.findOne({ code, userId:id })
+        const otp = await OTP.findOne({ code, userId: id })
         if (!otp) return res.status(400).json({ message: "expired" })
         let user = await User.findById(id)
-        if(user.emailActivated) return res.status(400).json({message:"activated"})
-       user= await user.updateOne({emailActivated:true},{new:true})
+        if (user.emailActivated) return res.status(400).json({ message: "activated" })
+        user = await user.updateOne({ emailActivated: true }, { new: true })
         return res.status(202).json({ message: "done", doc: user })
     }
 )
@@ -164,8 +164,26 @@ export const sendCode = asyncHandler(
 
         if (!loginTimes) loginTimes = await LoginTimes.create({ userId: id })
         console.log(loginTimes);
-       await loginTimes.updateOne({ times: loginTimes.times + 1 })
+        await loginTimes.updateOne({ times: loginTimes.times + 1 })
 
         return res.status(200).json({ message: "done" })
+    }
+)
+
+export const updateWishlist = asyncHandler(
+    async (req, res, nxt) => {
+        const { stock, op } = req.body
+        if (op == "add") {
+            await req.user.wishlist.push(stock)
+            await req.user.save()
+        } else {
+            console.log("here");
+            const wishlist = req.user.wishlist;
+            const updatedWishlist = wishlist.filter(item => item.toString() !== stock);
+            req.user.wishlist = updatedWishlist;
+            await req.user.save()
+        }
+        const user= await User.findById(req.user._id).populate('wishlist')
+        return res.status(201).json({ message: "done", user })
     }
 )
