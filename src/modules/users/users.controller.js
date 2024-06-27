@@ -176,18 +176,21 @@ export const sendCode = asyncHandler(
 
 export const updateWishlist = asyncHandler(
     async (req, res, nxt) => {
+        const{id} =req.params
+        const user= await User.findById(id)
+        if(!user)return res.status(400).json({message:"id not found"})
+        req.user=user
         const { stock, op } = req.body
         if (op == "add") {
             await req.user.wishlist.push(stock)
             await req.user.save()
         } else {
-            console.log("here");
             const wishlist = req.user.wishlist;
             const updatedWishlist = wishlist.filter(item => item.toString() !== stock);
             req.user.wishlist = updatedWishlist;
             await req.user.save()
         }
-        const user= await User.findById(req.user._id).populate('wishlist')
-        return res.status(201).json({ message: "done", user })
+        const returnUser= await User.findById(req.user._id).populate('wishlist')
+        return res.status(201).json({ message: "done", returnUser })
     }
 )
