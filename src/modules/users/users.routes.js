@@ -23,7 +23,7 @@ usersRouter.get("/:id",usersController.getUserData)
 // usersRouter.get("/confirmEmail/:token",usersController.confirmEmail)
 // usersRouter.get("/newConfirmEmail/:token",usersController.newConfirmEmail)
 
-usersRouter.put("/update/fromUser",checkUserToken,
+usersRouter.put("/update/fromUser/:id",
 appValidator(usersValidationSchemas.updateUserValidation),usersController.updateUserFromUser)
 
 usersRouter.put("/update/fromAdmin/:id",checkUserToken,allowedTo(['admin'])

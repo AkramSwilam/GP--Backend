@@ -8,6 +8,7 @@ export const addUserSchema = Joi.object({
 }).required()
 
 export const updateUserValidation = Joi.object({
+    id:Joi.string(),
     name: Joi.string(),
     //email: Joi.string().alphanum().email(),
     password: Joi.string().min(6),

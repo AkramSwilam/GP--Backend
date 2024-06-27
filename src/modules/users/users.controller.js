@@ -58,7 +58,11 @@ export const getUsers = crudOps.getAll(User)
 
 export const updateUserFromUser = asyncHandler(
     async (req, res, nxt) => {
+        const{id}=req.params
+        const user=await User.findById(id)
+        if(!user) return res.status(404).json({message:"user not found"})
 
+        req.user=user
         if (req.body.password && !req.body.oldPassword) return res.status(400).json({ message: "send old password" })
 
         if (req.body.password && req.body.oldPassword) {
@@ -67,7 +71,7 @@ export const updateUserFromUser = asyncHandler(
         }
 
         await req.user.updateOne(req.body)
-        return res.status(202).json({ message: "done", doc: req.user })
+        return res.status(202).json({ message: "done", doc: await User.findById(req.user._id) })
     }
 )
 
