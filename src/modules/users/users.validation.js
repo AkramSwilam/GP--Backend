@@ -19,7 +19,7 @@ export const updateUserValidationAdmin = Joi.object({
     id: Joi.string().required(),
     name: Joi.string(),
     //email: Joi.string().alphanum().email(),
-    // password: Joi.string().min(6),
+    password: Joi.string().min(6),
     role: Joi.string().valid('admin', 'user'),
     emailActivated: Joi.boolean()
 })
