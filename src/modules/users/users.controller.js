@@ -182,13 +182,14 @@ export const updateWishlist = asyncHandler(
         req.user=user
         const { stock, op } = req.body
         if (op == "add") {
-            await req.user.wishlist.push(stock)
-            await req.user.save()
+            let wishlist=req.user.wishlist
+            wishlist.push(stock)
+            // await req.user.wishlist.push(stock)
+            await req.user.updateOne({wishlist})
         } else {
             const wishlist = req.user.wishlist;
             const updatedWishlist = wishlist.filter(item => item.toString() !== stock);
-            req.user.wishlist = updatedWishlist;
-            await req.user.save()
+            await req.user.updateOne({wishlist:updatedWishlist})
         }
         const returnUser= await User.findById(req.user._id).populate('wishlist')
         return res.status(201).json({ message: "done", returnUser })
