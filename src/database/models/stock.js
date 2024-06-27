@@ -68,6 +68,9 @@ const stockSchema = new Schema({
         ref: 'Category',
         required: true
     },
+    sentimentScore:{
+        type:Number
+    }
 },    {
     timestamps:true,
     })
