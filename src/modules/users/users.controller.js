@@ -70,7 +70,7 @@ export const updateUserFromUser = asyncHandler(
             if (!rightPassword) return res.status(402).json({ message: "wrong password" })
         }
 
-        await req.user.updateOne(req.body)
+        await User.findByIdAndUpdate(req.user._id,req.body)
         return res.status(202).json({ message: "done", doc: await User.findById(req.user._id) })
     }
 )
