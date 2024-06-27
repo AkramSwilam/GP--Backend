@@ -33,7 +33,8 @@ export const addStockValidation = Joi.object({
     })),
     predictions: Joi.array().items(Joi.number()).max(6),
     categoryId: Joi.string().alphanum().required(),
-    sentimentScore:Joi.number()
+    sentimentScore:Joi.number(),
+    newsData:Joi.array()
 }).required();
 
 
@@ -52,6 +53,7 @@ export const updateStockValidation = Joi.object({
         prediction: Joi.number()
     })),
     categoryId: Joi.string().alphanum(),
-    sentimentScore:Joi.number()
+    sentimentScore:Joi.number(),
+    newsData:Joi.array()
 }).required();
 

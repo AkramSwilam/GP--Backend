@@ -70,6 +70,9 @@ const stockSchema = new Schema({
     },
     sentimentScore:{
         type:Number
+    },
+    newsData:{
+        type:[{}]
     }
 },    {
     timestamps:true,
